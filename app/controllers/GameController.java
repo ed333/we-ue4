@@ -23,6 +23,7 @@ import views.html.jeopardy;
 import views.html.question;
 import views.html.winner;
 
+
 @Security.Authenticated(Secured.class)
 public class GameController extends Controller {
 	
@@ -153,6 +154,14 @@ public class GameController extends Controller {
 	@play.db.jpa.Transactional(readOnly = true)
 	public static Result gameOver() {
 		JeopardyGame game = cachedGame(request().username());
+		
+		if (game.isGameOver()){
+          HighScoreController hsc =new HighScoreController();
+          Logger.info("[" + request().username() + "] HighScore posted");
+          hsc.postHighscore(game);
+
+		}
+		
 		if(game == null || !game.isGameOver())
 			return redirect(routes.GameController.playGame());
 		
