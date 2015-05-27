@@ -86,6 +86,7 @@ public class GameController extends Controller {
 	public static Result newGame() {
 		Logger.info("[" + request().username() + "] Start new game.");
 		JeopardyGame game = createNewGame(request().username());
+		Logger.info("[" + request().username() + "] Testing: game is over.");
 		return ok(jeopardy.render(game));
 	}
 	
@@ -99,6 +100,12 @@ public class GameController extends Controller {
 			Logger.info("[" + request().username() + "] Answer pending... redirect");
 			return ok(question.render(game));
 		} else if(game.isGameOver()) {
+			
+	          HighScoreController hsc =new HighScoreController();
+	          //test
+	          Logger.info("[" + request().username() + "] HighScore posted");
+	          hsc.postHighscore(game);
+			
 			Logger.info("[" + request().username() + "] Game over... redirect");
 			return ok(winner.render(game));
 		}			
