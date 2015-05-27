@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 
+import play.Logger;
 import models.JeopardyUser;
 import models.Player;
 import highscore.*;
@@ -29,30 +30,37 @@ public class HighScoreController {
 
         try {
             request.setUserKey("3ke93-gue34-dkeu9");
-            GregorianCalendar cal = new GregorianCalendar();
+            GregorianCalendar cal = new GregorianCalendar(); 
 
-            UserType loserUDT= factory.createUserType();
+            UserType loserUT= factory.createUserType();
             JeopardyUser loser = currentGame.getLoser().getUser();
-            loserUDT.setFirstName(loser.getFirstName());
-            loserUDT.setLastName(loser.getLastName());
-            loserUDT.setPassword("");
-            loserUDT.setPoints(currentGame.getLoser().getProfit());
+            loserUT.setFirstName(loser.getFirstName());
+            loserUT.setLastName(loser.getLastName());
+            loserUT.setPassword("");
+            loserUT.setPoints(currentGame.getLoser().getProfit());
             
             cal.setTime(loser.getBirthDate());
-            loserUDT.setBirthDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(cal));
-            loserUDT.setGender(GenderType.fromValue(loser.getGender().toString()));
+            //cal = new GregorianCalendar(1990,1,1);
+            loserUT.setBirthDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(cal));
+            loserUT.setGender(GenderType.fromValue(loser.getGender().toString()));
  
-            UserType winnerUDT= factory.createUserType();
+            UserType winnerUT= factory.createUserType();
             JeopardyUser winner = currentGame.getWinner().getUser();
             
-            winnerUDT.setFirstName(winner.getFirstName());
-            winnerUDT.setLastName(winner.getLastName());
-            winnerUDT.setPassword("");
-            winnerUDT.setPoints(currentGame.getWinner().getProfit());
+            winnerUT.setFirstName(winner.getFirstName());
+            winnerUT.setLastName(winner.getLastName());
+            winnerUT.setPassword("");
+            winnerUT.setPoints(currentGame.getWinner().getProfit());
             
             cal.setTime(winner.getBirthDate());
-            winnerUDT.setBirthDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(cal));
-            winnerUDT.setGender(GenderType.fromValue(winner.getGender().toString()));                        
+            //cal= new GregorianCalendar(1980,5,5);
+            winnerUT.setBirthDate(DatatypeFactory.newInstance().newXMLGregorianCalendar(cal));
+            winnerUT.setGender(GenderType.fromValue(winner.getGender().toString())); 
+            
+            UserDataType udt = factory.createUserDataType();
+            udt.setLoser(loserUT);
+            udt.setWinner(winnerUT);
+            request.setUserData(udt);
             
         } catch (Exception e) {
             System.err.println(e);
@@ -62,11 +70,10 @@ public class HighScoreController {
 
         String response = "";
 
-        System.out.println("HIGHSCORE POST SUCCESS NUMBER ONE!");
-
         try {
             response = highscoreService.getPublishHighScorePort().publishHighScore(request);
-            System.out.println("HIGHSCORE POST SUCCESS!");
+            Logger.info("Response received: "+ response + ".");
+
         } catch (Failure e) {
             System.out.println(e);
             e.printStackTrace();
