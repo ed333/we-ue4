@@ -72,12 +72,13 @@ public class HighScoreController {
 
         try {
             response = highscoreService.getPublishHighScorePort().publishHighScore(request);
-            Logger.info("Response received: "+ response + ".");
+            Logger.debug("Response received: "+ response + ".");
 
         } catch (Failure e) {
-            System.out.println(e);
-            e.printStackTrace();
-            System.err.println(e.getFaultInfo().getDetail());
+            //System.out.println(e);
+            //e.printStackTrace();
+        	Logger.error(e.getMessage());
+            Logger.error(e.getFaultInfo().getDetail());
         }
         return response;
     }

@@ -143,7 +143,7 @@ public class GameController extends Controller {
 		
 		@SuppressWarnings("unchecked")
 		Map<String,String> data = form.getData();
-		List<Long> answerIds = new ArrayList();
+		List<Long> answerIds = new ArrayList<Long>();
 		
 		for(String key : data.keySet()) {
 			if(key.startsWith("answers[")) {

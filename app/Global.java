@@ -7,6 +7,8 @@ import play.Application;
 import play.GlobalSettings;
 import play.Logger;
 import play.Play;
+import play.api.mvc.RequestHeader;
+import play.api.mvc.Result;
 import play.db.jpa.JPA;
 import play.libs.F.Function0;
 import data.JSONDataInserter;
@@ -42,5 +44,23 @@ public class Global extends GlobalSettings {
     public void onStop(Application app) {
         Logger.info("Application shutdown...");
     }
+    
+    // called when a route is found, but it was not possible to bind the request parameters
+    public Result onBadRequest(RequestHeader request, String error) {
+        Logger.error("Bad Request: " + error);
+        return null;
+      } 
+     
+      // 500 - internal server error
+    public Result onError(RequestHeader request, Throwable throwable) {
+        Logger.error("Internal server error: "+ throwable.getMessage());
+        return null;
+      }
+     
+      // 404 - page not found error
+    public Result onHandlerNotFound(RequestHeader request) {
+        Logger.error("HandlerNotFound: "+request.toString());
+        return null;
+      }
 
 }
