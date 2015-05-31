@@ -21,7 +21,7 @@ import models.JeopardyUser.Gender;
 
 
 public class JeopardyGame {	
-	private static final int NUM_QUESTIONS = 0; //test: game over
+	private static final int NUM_QUESTIONS = 5; 
 
 	private Random random = new Random();
 	

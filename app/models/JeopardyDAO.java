@@ -58,14 +58,11 @@ public class JeopardyDAO implements IGameDAO {
      */
     @Override
     public void persist(BaseEntity entity) {
-    //	if (em().find(entity.getClass(), entity.getId())==null){
+    	if (findEntity(entity.getId(), entity.getClass())==null){
     		em().persist(entity);
-    		return;
-    		
-   // 	}
-    	
-        // TODO: Implement Method
-       // throw new UnsupportedOperationException("Entity already exists.");
+    		return;	
+    	}
+       throw new UnsupportedOperationException("Entity already exists.");
     }
 
 
@@ -78,9 +75,15 @@ public class JeopardyDAO implements IGameDAO {
      */
     @Override
     public <T extends BaseEntity> T merge(T entity) {
-        // TODO: Implement Method
-    	return entity;
-      //  throw new UnsupportedOperationException("Not yet implemented.");
+    	return em().merge(entity);       
+/*    	@SuppressWarnings("unchecked")
+		T old =(T) findEntity(entity.getId(), entity.getClass());
+    	if (old==null){
+    		em().persist(entity);
+    		return entity;
+    	}
+    	
+    	return null;*/
     }
 
     /**
@@ -92,8 +95,10 @@ public class JeopardyDAO implements IGameDAO {
      */
     @Override
     public <T extends BaseEntity> T findEntity(Long id, Class<T> entityClazz) {
-        // TODO: Implement Method
-        throw new UnsupportedOperationException("Not yet implemented.");
+    	List<T> list= this.findEntities(entityClazz);
+    	if(list.isEmpty())
+    		return null;
+    	return  list.iterator().next();
     }
 
 
@@ -106,14 +111,10 @@ public class JeopardyDAO implements IGameDAO {
      */
     @Override
     public <E extends BaseEntity> List<E> findEntities(Class<E> entityClazz) {
-        // TODO: Implement Method
-        Query query = em().createQuery("select * from "+ entityClazz.getName());
+        Query query = em().createQuery("from " + entityClazz.getName());
         @SuppressWarnings("unchecked")
 		List<E> list = (List<E>) query.getResultList();
 		return list;
-
-
-        //throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     /**

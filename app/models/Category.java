@@ -5,9 +5,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
 /**
  * Represents a category, which is stored in the DB
  */
+@Entity
 public class Category extends BaseEntity {
 
 
@@ -16,6 +20,7 @@ public class Category extends BaseEntity {
 
 
     //A list of questions in this category
+    @OneToMany
     private List<Question> questions = new ArrayList<Question>();
     
     /**

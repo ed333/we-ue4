@@ -1,18 +1,19 @@
 package controllers;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
+import highscore.Failure;
+import highscore.GenderType;
+import highscore.HighScoreRequestType;
+import highscore.ObjectFactory;
+import highscore.PublishHighScoreService;
+import highscore.UserDataType;
+import highscore.UserType;
 
-import java.math.BigInteger;
 import java.util.GregorianCalendar;
-import java.util.List;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 
-import play.Logger;
 import models.JeopardyUser;
-import models.Player;
-import highscore.*;
+import play.Logger;
 
 
 public class HighScoreController {

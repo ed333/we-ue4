@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +20,9 @@ import play.db.jpa.Transactional;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.mvc.Security;
+import twitter.ITwitterClient;
+import twitter.TwitterClient;
+import twitter.TwitterStatusMessage;
 import views.html.jeopardy;
 import views.html.question;
 import views.html.winner;
@@ -104,8 +108,17 @@ public class GameController extends Controller {
 	          HighScoreController hsc =new HighScoreController();
 	          //test
 	          Logger.info("[" + request().username() + "] HighScore posted");
-	          hsc.postHighscore(game);
-			
+	          String response= hsc.postHighscore(game);
+	          if(response!=null){
+	          ITwitterClient twitterClient = new TwitterClient();
+	          TwitterStatusMessage msg = new TwitterStatusMessage(game.getHuman().getName(), response, new GregorianCalendar().getTime() );
+	          try {
+				twitterClient.publishUuid(msg);
+			} catch (Exception e) {
+				Logger.error("Twitter message not posted :"+ msg.getTwitterPublicationString() );
+				e.printStackTrace();
+			}
+	          }
 			Logger.info("[" + request().username() + "] Game over... redirect");
 			return ok(winner.render(game));
 		}			
@@ -163,9 +176,21 @@ public class GameController extends Controller {
 		JeopardyGame game = cachedGame(request().username());
 		
 		if (game.isGameOver()){
-          HighScoreController hsc =new HighScoreController();
-          Logger.info("[" + request().username() + "] HighScore posted");
-          hsc.postHighscore(game);
+	          HighScoreController hsc =new HighScoreController();
+	          //test
+	          Logger.info("[" + request().username() + "] HighScore posted");
+	          String response= hsc.postHighscore(game);
+	          if(response!=null){
+	          ITwitterClient twitterClient = new TwitterClient();
+	          TwitterStatusMessage msg = new TwitterStatusMessage(game.getHuman().getName(), response, new GregorianCalendar().getTime() );
+	          try {
+				twitterClient.publishUuid(msg);
+			} catch (Exception e) {
+				Logger.error("Twitter message not posted :"+ msg.getTwitterPublicationString() );
+				e.printStackTrace();
+			}
+	          }
+			Logger.info("[" + request().username() + "] Game over... redirect");
 
 		}
 		
